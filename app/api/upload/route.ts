@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
 import { put } from "@vercel/blob";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -29,25 +27,11 @@ export async function POST(request: NextRequest) {
     const ext = file.name.split(".").pop() || "jpg";
     const filename = `${date}.${ext}`;
 
-    // Use Vercel Blob when token is available (production), otherwise local filesystem (dev)
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const blob = await put(filename, file, {
-        access: "private",
-      });
-      return NextResponse.json({ path: blob.url });
-    }
+    const blob = await put(filename, file, {
+      access: "private",
+    });
 
-    // Local filesystem fallback for development
-    const uploadDir = process.env.UPLOAD_DIR || "./public/uploads";
-    await mkdir(uploadDir, { recursive: true });
-
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const filePath = path.join(uploadDir, filename);
-
-    await writeFile(filePath, buffer);
-
-    return NextResponse.json({ path: `/uploads/${filename}` });
+    return NextResponse.json({ path: blob.url });
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json(

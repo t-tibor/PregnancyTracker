@@ -6,13 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Returns the display URL for an image path.
- * Private Vercel Blob URLs are routed through the /api/image proxy;
- * local /uploads/ paths are returned as-is.
+ * Returns the display URL for a private Vercel Blob image path,
+ * routed through the /api/image proxy.
  */
 export function getBlobImageSrc(imagePath: string): string {
-  if (imagePath.startsWith("https://") && imagePath.includes("blob.vercel-storage.com")) {
-    return `/api/image?url=${encodeURIComponent(imagePath)}`;
-  }
-  return imagePath;
+  return `/api/image?url=${encodeURIComponent(imagePath)}`;
 }
