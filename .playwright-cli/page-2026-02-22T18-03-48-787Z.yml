@@ -1,0 +1,29 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - link "🤰 Pregnancy Tracker" [ref=e3] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e4]:
+      - link "Home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - text: Home
+      - link "Table" [active] [ref=e9] [cursor=pointer]:
+        - /url: /table-report
+        - img [ref=e10]
+        - text: Table
+      - link "Charts" [ref=e12] [cursor=pointer]:
+        - /url: /chart-report
+        - img [ref=e13]
+        - text: Charts
+      - link "Admin" [ref=e15] [cursor=pointer]:
+        - /url: /entries
+        - img [ref=e16]
+        - text: Admin
+  - main [ref=e19]:
+    - generic [ref=e38]:
+      - heading "📋 Table Report" [level=1] [ref=e39]
+      - paragraph [ref=e40]: Measurement history will be displayed here in a table format.
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e33] [cursor=pointer]:
+    - img [ref=e34]
+  - alert [ref=e37]

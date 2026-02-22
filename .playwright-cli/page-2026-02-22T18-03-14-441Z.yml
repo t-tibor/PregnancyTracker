@@ -1,0 +1,33 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - link "🤰 Pregnancy Tracker" [ref=e3] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e4]:
+      - link "Home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - text: Home
+      - link "Table" [ref=e9] [cursor=pointer]:
+        - /url: /table-report
+        - img [ref=e10]
+        - text: Table
+      - link "Charts" [ref=e12] [cursor=pointer]:
+        - /url: /chart-report
+        - img [ref=e13]
+        - text: Charts
+      - link "Admin" [ref=e15] [cursor=pointer]:
+        - /url: /entries
+        - img [ref=e16]
+        - text: Admin
+  - main [ref=e19]:
+    - generic [ref=e20]:
+      - heading "🤰 Daily Measurement" [level=1] [ref=e21]
+      - generic [ref=e22]:
+        - generic [ref=e24]: Today's Entry
+        - generic [ref=e25]:
+          - paragraph [ref=e26]: The daily measurement entry will appear here.
+          - paragraph [ref=e27]: Weight • Circumference • Photo
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e33] [cursor=pointer]:
+    - img [ref=e34]
+  - alert [ref=e37]

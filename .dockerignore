@@ -1,0 +1,51 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Next.js
+.next
+out
+
+# Build
+dist
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose*.yml
+
+# Helm
+helm/
+
+# Docs
+docs/
+README.md
+CLAUDE.md
+
+# Testing
+.playwright/
+.playwright-cli/
+
+# Uploads (will be mounted as volume)
+public/uploads/*
+!public/uploads/.gitkeep

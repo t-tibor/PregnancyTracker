@@ -1,0 +1,43 @@
+replicaCount: 1
+
+image:
+  repository: pregnancy-tracker
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations: {}
+  host: pregnancy.local
+  tls: []
+
+supabase:
+  databaseUrl: ""
+  directUrl: ""
+
+env:
+  uploadDir: /app/public/uploads
+
+persistence:
+  enabled: true
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
