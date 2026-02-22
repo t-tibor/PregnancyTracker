@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { del } from "@vercel/blob";
 
 function todayDate(): Date {
   const now = new Date();
@@ -11,6 +12,18 @@ function todayDate(): Date {
 function parseDate(dateStr: string): Date {
   const [year, month, day] = dateStr.split("-").map(Number);
   return new Date(Date.UTC(year, month - 1, day));
+}
+
+/** Deletes a Vercel Blob image if the path is a blob URL. Silently ignores local paths. */
+async function deleteImageIfBlob(imagePath: string | null) {
+  if (imagePath?.includes("blob.vercel-storage.com")) {
+    try {
+      await del(imagePath);
+    } catch {
+      // Non-fatal: log but don't block the main operation
+      console.warn("Failed to delete blob:", imagePath);
+    }
+  }
 }
 
 export async function getTodayMeasurement() {
@@ -66,6 +79,12 @@ export async function updateMeasurement(
     imagePath?: string | null;
   }
 ) {
+  // Fetch existing record so we can delete a replaced image
+  const existing = await prisma.measurement.findUnique({
+    where: { date: parseDate(dateStr) },
+    select: { imagePath: true },
+  });
+
   const measurement = await prisma.measurement.update({
     where: { date: parseDate(dateStr) },
     data: {
@@ -74,6 +93,12 @@ export async function updateMeasurement(
       imagePath: data.imagePath ?? null,
     },
   });
+
+  // Delete old blob if the image was replaced or removed
+  if (existing?.imagePath && existing.imagePath !== data.imagePath) {
+    await deleteImageIfBlob(existing.imagePath);
+  }
+
   revalidatePath("/");
   revalidatePath("/entries");
   revalidatePath(`/entries/${dateStr}`);
@@ -83,9 +108,18 @@ export async function updateMeasurement(
 }
 
 export async function deleteMeasurement(dateStr: string) {
+  // Fetch imagePath before deleting so we can clean up the blob
+  const existing = await prisma.measurement.findUnique({
+    where: { date: parseDate(dateStr) },
+    select: { imagePath: true },
+  });
+
   await prisma.measurement.delete({
     where: { date: parseDate(dateStr) },
   });
+
+  await deleteImageIfBlob(existing?.imagePath ?? null);
+
   revalidatePath("/");
   revalidatePath("/entries");
   revalidatePath("/table-report");

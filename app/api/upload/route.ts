@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+import { put } from "@vercel/blob";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,16 +26,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (file.size > MAX_SIZE) {
-      return NextResponse.json(
-        { error: "File too large. Maximum size is 5 MB." },
-        { status: 400 }
-      );
-    }
-
     const ext = file.name.split(".").pop() || "jpg";
     const filename = `${date}.${ext}`;
 
+    // Use Vercel Blob when token is available (production), otherwise local filesystem (dev)
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const blob = await put(filename, file, {
+        access: "private",
+      });
+      return NextResponse.json({ path: blob.url });
+    }
+
+    // Local filesystem fallback for development
     const uploadDir = process.env.UPLOAD_DIR || "./public/uploads";
     await mkdir(uploadDir, { recursive: true });
 
@@ -45,9 +47,7 @@ export async function POST(request: NextRequest) {
 
     await writeFile(filePath, buffer);
 
-    const publicPath = `/uploads/${filename}`;
-
-    return NextResponse.json({ path: publicPath });
+    return NextResponse.json({ path: `/uploads/${filename}` });
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json(

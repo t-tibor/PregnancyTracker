@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import { Camera } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getBlobImageSrc } from "@/lib/utils";
 
 interface ImageEditorProps {
   imagePath: string | null;
@@ -43,12 +42,11 @@ export function ImageEditor({
         )}
       >
         {imagePath ? (
-          <Image
-            src={imagePath}
+          <img
+            src={getBlobImageSrc(imagePath)}
             alt="Belly photo"
-            fill
-            className="object-cover"
-            sizes="256px"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         ) : (
           <div className="flex flex-col items-center gap-2 text-muted-foreground">

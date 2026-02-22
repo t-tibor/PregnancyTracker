@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { ArrowLeft, Pencil, Trash2, X, Save } from "lucide-react";
 import { toast } from "sonner";
 import { updateMeasurement, deleteMeasurement } from "@/app/actions";
+import { getBlobImageSrc } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -230,11 +230,11 @@ export function EntryDetail({
           <Label className="text-muted-foreground text-sm">Photo</Label>
           {imagePath ? (
             <div className="relative w-full max-w-sm aspect-[3/4] rounded-lg overflow-hidden border">
-              <Image
-                src={imagePath}
+              <img
+                src={getBlobImageSrc(imagePath)}
                 alt={`Belly photo for ${date}`}
-                fill
-                className="object-cover"
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover"
               />
             </div>
           ) : (
