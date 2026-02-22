@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getMeasurement } from "@/app/actions";
 import { notFound } from "next/navigation";
 import { EntryDetail } from "@/components/entry-detail";

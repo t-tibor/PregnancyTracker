@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { DailyEntry } from "@/components/daily-entry";
 import { getTodayMeasurement, getLatestMeasurement } from "@/app/actions";
 
