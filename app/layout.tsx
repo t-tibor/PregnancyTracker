@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pregnancy Tracker",
-  description: "Track your pregnancy measurements — weight, abdominal circumference, and belly photos.",
+  title: "Terhességkövető",
+  description: "Kövesd terhességi méréseidet — testsúly, haskörfogat és pocakfotók.",
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="hu">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

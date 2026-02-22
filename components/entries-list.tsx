@@ -46,7 +46,7 @@ export function EntriesList({ entries }: { entries: Entry[] }) {
   function formatDate(dateStr: string): string {
     const [year, month, day] = dateStr.split("-").map(Number);
     return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString(
-      "en-US",
+      "hu-HU",
       {
         weekday: "short",
         year: "numeric",
@@ -59,7 +59,7 @@ export function EntriesList({ entries }: { entries: Entry[] }) {
   async function handleCreate() {
     const weight = parseFloat(newWeight);
     if (isNaN(weight) || weight <= 0) {
-      toast.error("Please enter a valid weight.");
+      toast.error("Kérjük, adjon meg érvényes testsúlyt.");
       return;
     }
 
@@ -67,7 +67,7 @@ export function EntriesList({ entries }: { entries: Entry[] }) {
       ? parseFloat(newCircumference)
       : null;
     if (circumference !== null && (isNaN(circumference) || circumference <= 0)) {
-      toast.error("Please enter a valid circumference.");
+      toast.error("Kérjük, adjon meg érvényes körfogatértéket.");
       return;
     }
 
@@ -78,11 +78,11 @@ export function EntriesList({ entries }: { entries: Entry[] }) {
         weight,
         circumference,
       });
-      toast.success("Entry created successfully!");
+      toast.success("Bejegyzés sikeresen létrehozva!");
       setOpen(false);
       router.refresh();
     } catch {
-      toast.error("Failed to create entry. Date may already exist.");
+      toast.error("Sikertelen létrehozás. A dátum már létezhet.");
     } finally {
       setSaving(false);
     }
@@ -95,16 +95,16 @@ export function EntriesList({ entries }: { entries: Entry[] }) {
           <DialogTrigger asChild>
             <Button size="sm">
               <Plus className="h-4 w-4 mr-1" />
-              New Entry
+              Új bejegyzés
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>New Measurement</DialogTitle>
+              <DialogTitle>Új mérés</DialogTitle>
             </DialogHeader>
             <div className="flex flex-col gap-4 py-2">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="new-date">Date</Label>
+                <Label htmlFor="new-date">Dátum</Label>
                 <Input
                   id="new-date"
                   type="date"
@@ -113,7 +113,7 @@ export function EntriesList({ entries }: { entries: Entry[] }) {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <Label htmlFor="new-weight">Weight (kg)</Label>
+                <Label htmlFor="new-weight">Testsúly (kg)</Label>
                 <Input
                   id="new-weight"
                   type="number"
@@ -125,9 +125,9 @@ export function EntriesList({ entries }: { entries: Entry[] }) {
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="new-circumference">
-                  Circumference (cm){" "}
+                  Körfogat (cm){" "}
                   <span className="text-muted-foreground text-xs">
-                    optional
+                    nem kötelező
                   </span>
                 </Label>
                 <Input
@@ -143,10 +143,10 @@ export function EntriesList({ entries }: { entries: Entry[] }) {
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline">Mégse</Button>
               </DialogClose>
               <Button onClick={handleCreate} disabled={saving}>
-                {saving ? "Saving…" : "Save"}
+                {saving ? "Mentés…" : "Mentés"}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -155,17 +155,17 @@ export function EntriesList({ entries }: { entries: Entry[] }) {
 
       {entries.length === 0 ? (
         <p className="text-muted-foreground text-center py-12">
-          No entries yet. Click &quot;New Entry&quot; to add one.
+          Még nincsenek bejegyzések. Kattintson az &quot;Új bejegyzés&quot; gombra az első hozzáadásához.
         </p>
       ) : (
         <div className="rounded-lg border bg-card">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead className="text-right">Weight</TableHead>
-                <TableHead className="text-right">Circ.</TableHead>
-                <TableHead className="text-center">Photo</TableHead>
+                <TableHead>Dátum</TableHead>
+                <TableHead className="text-right">Testsúly</TableHead>
+                <TableHead className="text-right">Körf.</TableHead>
+                <TableHead className="text-center">Fotó</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

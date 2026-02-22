@@ -13,7 +13,7 @@ export default async function EntriesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold text-primary">⚙️ Admin — Entries</h1>
+      <h1 className="text-2xl font-bold text-primary">⚙️ Admin — Bejegyzések</h1>
       <EntriesList entries={entries} />
     </div>
   );

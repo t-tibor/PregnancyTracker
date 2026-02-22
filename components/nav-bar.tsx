@@ -6,9 +6,9 @@ import { Home, Table, BarChart3, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/table-report", label: "Table", icon: Table },
-  { href: "/chart-report", label: "Charts", icon: BarChart3 },
+  { href: "/", label: "Főoldal", icon: Home },
+  { href: "/table-report", label: "Táblázat", icon: Table },
+  { href: "/chart-report", label: "Grafikonok", icon: BarChart3 },
   { href: "/entries", label: "Admin", icon: Settings },
 ];
 
@@ -20,7 +20,7 @@ export function NavBar() {
       {/* Desktop: top nav bar */}
       <nav className="hidden md:flex items-center justify-between border-b border-border bg-card px-6 py-3">
         <Link href="/" className="text-lg font-semibold text-primary">
-          🤰 Pregnancy Tracker
+          🤰 Terhességkövető
         </Link>
         <div className="flex items-center gap-1">
           {navItems.map((item) => {

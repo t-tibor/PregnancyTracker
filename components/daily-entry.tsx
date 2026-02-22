@@ -42,7 +42,7 @@ export function DailyEntry({
   const [isPending, startTransition] = useTransition();
 
   const [activeSlide, setActiveSlide] = useState(0);
-  const slides = ["Weight", "Circumference", "Photo"];
+  const slides = ["Testsúly", "Körfogat", "Fotó"];
 
   const handleImageSelected = useCallback((file: File) => {
     setPendingFile(file);
@@ -66,7 +66,7 @@ export function DailyEntry({
           });
           if (!res.ok) {
             const err = await res.json();
-            toast.error(err.error || "Failed to upload image");
+            toast.error(err.error || "Sikertelen képfeltöltés");
             return;
           }
           const data = await res.json();
@@ -79,7 +79,7 @@ export function DailyEntry({
             circumference,
             imagePath: uploadedPath,
           });
-          toast.success("Measurement updated!");
+          toast.success("Mérés frissítve!");
         } else {
           await createMeasurement({
             date: today,
@@ -87,7 +87,7 @@ export function DailyEntry({
             circumference,
             imagePath: uploadedPath,
           });
-          toast.success("Measurement saved!");
+          toast.success("Mérés mentve!");
         }
 
         setImagePath(uploadedPath);
@@ -98,7 +98,7 @@ export function DailyEntry({
         }
         setIsEditing(false);
       } catch {
-        toast.error("Failed to save measurement");
+        toast.error("Sikertelen mentés");
       }
     });
   }, [weight, circumference, imagePath, pendingFile, previewUrl, today, existing]);
@@ -111,7 +111,7 @@ export function DailyEntry({
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <h1 className="text-2xl font-bold text-primary">🤰 Daily Measurement</h1>
+      <h1 className="text-2xl font-bold text-primary">🤰 Napi Mérés</h1>
 
       {/* Slide indicators */}
       <div className="flex items-center gap-2">
@@ -137,7 +137,7 @@ export function DailyEntry({
           {activeSlide === 0 && (
             <div className="flex flex-col items-center gap-2">
               <h2 className="text-lg font-semibold text-muted-foreground">
-                Weight
+                Testsúly
               </h2>
               <DigitRoller
                 value={weight}
@@ -154,7 +154,7 @@ export function DailyEntry({
           {activeSlide === 1 && (
             <div className="flex flex-col items-center gap-2">
               <h2 className="text-lg font-semibold text-muted-foreground">
-                Circumference
+                Körfogat
               </h2>
               <DigitRoller
                 value={circumference ?? defaultCircumference}
@@ -171,7 +171,7 @@ export function DailyEntry({
           {activeSlide === 2 && (
             <div className="flex flex-col items-center gap-2">
               <h2 className="text-lg font-semibold text-muted-foreground">
-                Photo
+                Fotó
               </h2>
               <ImageEditor
                 imagePath={displayImagePath}
@@ -196,7 +196,7 @@ export function DailyEntry({
           ) : (
             <Save className="mr-2 h-4 w-4" />
           )}
-          {isPending ? "Saving..." : "Save"}
+          {isPending ? "Mentés..." : "Mentés"}
         </Button>
       ) : (
         <Button
@@ -206,7 +206,7 @@ export function DailyEntry({
           className="w-full max-w-sm cursor-pointer"
         >
           <Pencil className="mr-2 h-4 w-4" />
-          Edit
+          Szerkesztés
         </Button>
       )}
     </div>

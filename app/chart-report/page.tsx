@@ -8,11 +8,11 @@ export default async function ChartReportPage() {
   const chronological = [...measurements].reverse();
 
   const chartData = chronological.map((m) => ({
-    date: new Date(m.date).toLocaleDateString("en-US", {
+    date: new Date(m.date).toLocaleDateString("hu-HU", {
       month: "short",
       day: "numeric",
     }),
-    fullDate: new Date(m.date).toLocaleDateString("en-US", {
+    fullDate: new Date(m.date).toLocaleDateString("hu-HU", {
       weekday: "short",
       year: "numeric",
       month: "short",
@@ -24,12 +24,11 @@ export default async function ChartReportPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold text-primary">📊 Chart Report</h1>
+      <h1 className="text-2xl font-bold text-primary">📊 Grafikon Kimutatás</h1>
 
       {chartData.length === 0 ? (
         <p className="text-muted-foreground text-center py-12">
-          No measurements recorded yet. Start by adding your first entry on the
-          Home page.
+          Még nincs rögzített mérés. Kezdd az első bejegyzés hozzáadásával a Főoldalon.
         </p>
       ) : (
         <ChartReport data={chartData} />

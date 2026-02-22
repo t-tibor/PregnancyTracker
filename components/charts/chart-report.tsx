@@ -53,7 +53,7 @@ function CustomTooltip({
       {payload.map((entry, i) => (
         <p key={i} className="text-sm" style={{ color: entry.color }}>
           {entry.name}: <span className="font-semibold">{entry.value?.toFixed(1)}</span>
-          {entry.name === "Weight" ? " kg" : " cm"}
+          {entry.name === "Tests\u00faly" ? " kg" : " cm"}
         </p>
       ))}
     </div>
@@ -78,7 +78,7 @@ function ComboChart({ data }: { data: ChartDataPoint[] }) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">Weight & Circumference</CardTitle>
+        <CardTitle className="text-base">Testsúly &amp; Körfogat</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={350}>
@@ -119,7 +119,7 @@ function ComboChart({ data }: { data: ChartDataPoint[] }) {
             <Bar
               yAxisId="weight"
               dataKey="weight"
-              name="Weight"
+              name="Testsúly"
               fill="oklch(0.7 0.12 340)"
               opacity={0.7}
               radius={[4, 4, 0, 0]}
@@ -128,7 +128,7 @@ function ComboChart({ data }: { data: ChartDataPoint[] }) {
             <Line
               yAxisId="circumference"
               dataKey="circumference"
-              name="Circumference"
+              name="Körfogat"
               stroke="oklch(0.65 0.1 300)"
               strokeWidth={2}
               dot={{ r: 4, fill: "oklch(0.65 0.1 300)", strokeWidth: 0 }}
@@ -150,7 +150,7 @@ function WeightChart({ data }: { data: ChartDataPoint[] }) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">Weight (kg)</CardTitle>
+        <CardTitle className="text-base">Testsúly (kg)</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={280}>
@@ -169,7 +169,7 @@ function WeightChart({ data }: { data: ChartDataPoint[] }) {
             <Tooltip content={<CustomTooltip />} />
             <Bar
               dataKey="weight"
-              name="Weight"
+              name="Testsúly"
               fill="oklch(0.7 0.12 340)"
               opacity={0.8}
               radius={[4, 4, 0, 0]}
@@ -191,11 +191,11 @@ function CircumferenceChart({ data }: { data: ChartDataPoint[] }) {
     return (
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base">Circumference (cm)</CardTitle>
+          <CardTitle className="text-base">Körfogat (cm)</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground text-center py-8 text-sm">
-            No circumference data recorded yet.
+            Még nincs rögzített körfogat adat.
           </p>
         </CardContent>
       </Card>
@@ -208,7 +208,7 @@ function CircumferenceChart({ data }: { data: ChartDataPoint[] }) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">Circumference (cm)</CardTitle>
+        <CardTitle className="text-base">Körfogat (cm)</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={280}>
@@ -227,7 +227,7 @@ function CircumferenceChart({ data }: { data: ChartDataPoint[] }) {
             <Tooltip content={<CustomTooltip />} />
             <Line
               dataKey="circumference"
-              name="Circumference"
+              name="Körfogat"
               stroke="oklch(0.65 0.1 300)"
               strokeWidth={2}
               dot={{ r: 5, fill: "oklch(0.65 0.1 300)", strokeWidth: 0 }}
@@ -252,14 +252,14 @@ export function ChartReport({ data }: ChartReportProps) {
           size="sm"
           onClick={() => setMode("combo")}
         >
-          Combo Chart
+          Kombinált grafikon
         </Button>
         <Button
           variant={mode === "distinct" ? "default" : "outline"}
           size="sm"
           onClick={() => setMode("distinct")}
         >
-          Separate Charts
+          Külön grafikonok
         </Button>
       </div>
 

@@ -44,7 +44,7 @@ export function ImageEditor({
         {imagePath ? (
           <img
             src={getBlobImageSrc(imagePath)}
-            alt="Belly photo"
+            alt="Pocakfot\u00f3"
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
           />
@@ -52,7 +52,7 @@ export function ImageEditor({
           <div className="flex flex-col items-center gap-2 text-muted-foreground">
             <Camera className="h-12 w-12" />
             <span className="text-sm">
-              {readonly ? "No photo" : "Tap to add photo"}
+              {readonly ? "Nincs fotó" : "Koppints a fotó hozzáadásához"}
             </span>
           </div>
         )}
@@ -60,7 +60,7 @@ export function ImageEditor({
         {!readonly && imagePath && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity hover:opacity-100">
             <Camera className="h-8 w-8 text-white" />
-            <span className="ml-2 text-sm text-white">Change photo</span>
+            <span className="ml-2 text-sm text-white">Fotó cseréje</span>
           </div>
         )}
       </div>

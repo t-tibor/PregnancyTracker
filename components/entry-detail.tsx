@@ -48,7 +48,7 @@ export function EntryDetail({
   function formatDate(dateStr: string): string {
     const [year, month, day] = dateStr.split("-").map(Number);
     return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString(
-      "en-US",
+      "hu-HU",
       {
         weekday: "long",
         year: "numeric",
@@ -71,13 +71,13 @@ export function EntryDetail({
   async function handleSave() {
     const w = parseFloat(weight);
     if (isNaN(w) || w <= 0) {
-      toast.error("Please enter a valid weight.");
+      toast.error("Kérjük, adjon meg érvényes testsúlyt.");
       return;
     }
 
     const c = circumference ? parseFloat(circumference) : null;
     if (c !== null && (isNaN(c) || c <= 0)) {
-      toast.error("Please enter a valid circumference.");
+      toast.error("Kérjük, adjon meg érvényes körfogatértéket.");
       return;
     }
 
@@ -97,7 +97,7 @@ export function EntryDetail({
           const data = await res.json();
           uploadedPath = data.path;
         } else {
-          toast.error("Image upload failed.");
+          toast.error("Képfeltöltés sikertelen.");
           setSaving(false);
           return;
         }
@@ -109,11 +109,11 @@ export function EntryDetail({
         imagePath: uploadedPath,
       });
 
-      toast.success("Entry updated successfully!");
+      toast.success("Bejegyzés sikeresen frissítve!");
       setEditing(false);
       router.refresh();
     } catch {
-      toast.error("Failed to update entry.");
+      toast.error("Sikertelen frissítés.");
     } finally {
       setSaving(false);
     }
@@ -123,11 +123,11 @@ export function EntryDetail({
     setDeleting(true);
     try {
       await deleteMeasurement(date);
-      toast.success("Entry deleted.");
+      toast.success("Bejegyzés törölve.");
       router.push("/entries");
       router.refresh();
     } catch {
-      toast.error("Failed to delete entry.");
+      toast.error("Sikertelen törlés.");
     } finally {
       setDeleting(false);
     }
@@ -145,7 +145,7 @@ export function EntryDetail({
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <h1 className="text-2xl font-bold text-primary flex-1">
-          ⚙️ Entry Detail
+          ⚙️ Bejegyzés részletei
         </h1>
         {!editing && (
           <div className="flex gap-2">
@@ -155,7 +155,7 @@ export function EntryDetail({
               onClick={() => setEditing(true)}
             >
               <Pencil className="h-4 w-4 mr-1" />
-              Edit
+              Szerkesztés
             </Button>
             <Button
               variant="destructive"
@@ -163,7 +163,7 @@ export function EntryDetail({
               onClick={() => setDeleteOpen(true)}
             >
               <Trash2 className="h-4 w-4 mr-1" />
-              Delete
+              Törlés
             </Button>
           </div>
         )}
@@ -175,14 +175,14 @@ export function EntryDetail({
       <div className="flex flex-col gap-4">
         {/* Date (always read-only) */}
         <div className="flex flex-col gap-1">
-          <Label className="text-muted-foreground text-sm">Date</Label>
+          <Label className="text-muted-foreground text-sm">Dátum</Label>
           <p className="text-lg font-medium">{formatDate(date)}</p>
         </div>
 
         {/* Weight */}
         <div className="flex flex-col gap-1">
           <Label htmlFor="detail-weight" className="text-muted-foreground text-sm">
-            Weight (kg)
+            Testsúly (kg)
           </Label>
           {editing ? (
             <Input
@@ -204,7 +204,7 @@ export function EntryDetail({
             htmlFor="detail-circumference"
             className="text-muted-foreground text-sm"
           >
-            Circumference (cm)
+            Körfogat (cm)
           </Label>
           {editing ? (
             <Input
@@ -227,18 +227,18 @@ export function EntryDetail({
 
         {/* Image */}
         <div className="flex flex-col gap-2">
-          <Label className="text-muted-foreground text-sm">Photo</Label>
+          <Label className="text-muted-foreground text-sm">Fotó</Label>
           {imagePath ? (
             <div className="relative w-full max-w-sm aspect-[3/4] rounded-lg overflow-hidden border">
               <img
                 src={getBlobImageSrc(imagePath)}
-                alt={`Belly photo for ${date}`}
+                alt={`Pocakfot\u00f3: ${date}`}
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover"
               />
             </div>
           ) : (
-            <p className="text-muted-foreground">No photo</p>
+            <p className="text-muted-foreground">Nincs fotó</p>
           )}
           {editing && (
             <Input
@@ -261,11 +261,11 @@ export function EntryDetail({
         <div className="flex gap-2 pt-2">
           <Button onClick={handleSave} disabled={saving}>
             <Save className="h-4 w-4 mr-1" />
-            {saving ? "Saving…" : "Save"}
+            {saving ? "Mentés…" : "Mentés"}
           </Button>
           <Button variant="outline" onClick={handleCancel}>
             <X className="h-4 w-4 mr-1" />
-            Cancel
+            Mégse
           </Button>
         </div>
       )}
@@ -274,22 +274,21 @@ export function EntryDetail({
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Entry</DialogTitle>
+              <DialogTitle>Bejegyzés törlése</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            Are you sure you want to delete the measurement for{" "}
-            <strong>{formatDate(date)}</strong>? This action cannot be undone.
+            Biztosan törölni szeretné a mérést: <strong>{formatDate(date)}</strong>? Ez a művelet nem vonható vissza.
           </p>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">Mégse</Button>
             </DialogClose>
             <Button
               variant="destructive"
               onClick={handleDelete}
               disabled={deleting}
             >
-              {deleting ? "Deleting…" : "Delete"}
+              {deleting ? "Törlés…" : "Törlés"}
             </Button>
           </DialogFooter>
         </DialogContent>
