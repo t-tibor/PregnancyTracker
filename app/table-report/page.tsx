@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic';
-
 import { getMeasurements } from "@/app/actions";
 import {
   Table,

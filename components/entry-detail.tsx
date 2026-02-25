@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ArrowLeft, Pencil, Trash2, X, Save } from "lucide-react";
 import { toast } from "sonner";
 import { updateMeasurement, deleteMeasurement } from "@/app/actions";
@@ -141,9 +142,11 @@ export function EntryDetail({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => router.push("/entries")}
+            asChild
           >
-            <ArrowLeft className="h-5 w-5" />
+            <Link href="/entries">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
           </Button>
           <h1 className="text-2xl font-bold text-primary">
             ⚙️ Bejegyzés részletei
