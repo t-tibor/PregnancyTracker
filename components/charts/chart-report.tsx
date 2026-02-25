@@ -17,10 +17,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ChartDataPoint {
+  timestamp: number;
   date: string;
   fullDate: string;
   weight: number;
   circumference: number | null;
+}
+
+function formatTick(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString("hu-HU", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 interface ChartReportProps {
@@ -82,10 +90,14 @@ function ComboChart({ data }: { data: ChartDataPoint[] }) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={350}>
-          <ComposedChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: -10 }}>
+          <ComposedChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 10 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
             <XAxis
-              dataKey="date"
+              dataKey="timestamp"
+              type="number"
+              scale="time"
+              domain={["dataMin", "dataMax"]}
+              tickFormatter={formatTick}
               tick={{ fontSize: 12 }}
               className="fill-muted-foreground"
             />
@@ -95,11 +107,13 @@ function ComboChart({ data }: { data: ChartDataPoint[] }) {
               domain={[weightMin, weightMax]}
               tick={{ fontSize: 12 }}
               className="fill-muted-foreground"
+              unit=" kg"
               label={{
-                value: "kg",
+                value: "Testsúly (kg)",
                 angle: 90,
                 position: "insideRight",
-                style: { fontSize: 11 },
+                offset: 10,
+                style: { fontSize: 11, fill: "oklch(0.7 0.12 340)" },
               }}
             />
             <YAxis
@@ -108,11 +122,13 @@ function ComboChart({ data }: { data: ChartDataPoint[] }) {
               domain={[circumMin, circumMax]}
               tick={{ fontSize: 12 }}
               className="fill-muted-foreground"
+              unit=" cm"
               label={{
-                value: "cm",
+                value: "Körfogat (cm)",
                 angle: -90,
                 position: "insideLeft",
-                style: { fontSize: 11 },
+                offset: -2,
+                style: { fontSize: 11, fill: "oklch(0.65 0.1 300)" },
               }}
             />
             <Tooltip content={<CustomTooltip />} />
@@ -157,7 +173,11 @@ function WeightChart({ data }: { data: ChartDataPoint[] }) {
           <BarChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: -10 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
             <XAxis
-              dataKey="date"
+              dataKey="timestamp"
+              type="number"
+              scale="time"
+              domain={["dataMin", "dataMax"]}
+              tickFormatter={formatTick}
               tick={{ fontSize: 12 }}
               className="fill-muted-foreground"
             />
@@ -215,7 +235,11 @@ function CircumferenceChart({ data }: { data: ChartDataPoint[] }) {
           <LineChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: -10 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
             <XAxis
-              dataKey="date"
+              dataKey="timestamp"
+              type="number"
+              scale="time"
+              domain={["dataMin", "dataMax"]}
+              tickFormatter={formatTick}
               tick={{ fontSize: 12 }}
               className="fill-muted-foreground"
             />

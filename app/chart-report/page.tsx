@@ -7,20 +7,24 @@ export default async function ChartReportPage() {
   // Reverse to chronological order (oldest first) for charts
   const chronological = [...measurements].reverse();
 
-  const chartData = chronological.map((m) => ({
-    date: new Date(m.date).toLocaleDateString("hu-HU", {
-      month: "short",
-      day: "numeric",
-    }),
-    fullDate: new Date(m.date).toLocaleDateString("hu-HU", {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    }),
-    weight: m.weight,
-    circumference: m.circumference,
-  }));
+  const chartData = chronological.map((m) => {
+    const d = new Date(m.date);
+    return {
+      timestamp: d.getTime(),
+      date: d.toLocaleDateString("hu-HU", {
+        month: "short",
+        day: "numeric",
+      }),
+      fullDate: d.toLocaleDateString("hu-HU", {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }),
+      weight: m.weight,
+      circumference: m.circumference,
+    };
+  });
 
   return (
     <div className="flex flex-col gap-6">
