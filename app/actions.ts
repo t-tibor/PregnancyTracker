@@ -15,7 +15,7 @@ function parseDate(dateStr: string): Date {
 }
 
 /** Deletes a Vercel Blob image if the path is a blob URL. Silently ignores local paths. */
-async function deleteImageIfBlob(imagePath: string | null) {
+export async function deleteBlobImage(imagePath: string | null) {
   if (imagePath?.includes("blob.vercel-storage.com")) {
     try {
       await del(imagePath);
@@ -79,12 +79,6 @@ export async function updateMeasurement(
     imagePath?: string | null;
   }
 ) {
-  // Fetch existing record so we can delete a replaced image
-  const existing = await prisma.measurement.findUnique({
-    where: { date: parseDate(dateStr) },
-    select: { imagePath: true },
-  });
-
   const measurement = await prisma.measurement.update({
     where: { date: parseDate(dateStr) },
     data: {
@@ -93,11 +87,6 @@ export async function updateMeasurement(
       imagePath: data.imagePath ?? null,
     },
   });
-
-  // Delete old blob if the image was replaced or removed
-  if (existing?.imagePath && existing.imagePath !== data.imagePath) {
-    await deleteImageIfBlob(existing.imagePath);
-  }
 
   revalidatePath("/");
   revalidatePath("/entries");
@@ -118,7 +107,7 @@ export async function deleteMeasurement(dateStr: string) {
     where: { date: parseDate(dateStr) },
   });
 
-  await deleteImageIfBlob(existing?.imagePath ?? null);
+  await deleteBlobImage(existing?.imagePath ?? null);
 
   revalidatePath("/");
   revalidatePath("/entries");

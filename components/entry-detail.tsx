@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, Pencil, Trash2, X, Save } from "lucide-react";
 import { toast } from "sonner";
 import { upload } from "@vercel/blob/client";
-import { updateMeasurement, deleteMeasurement } from "@/app/actions";
+import { updateMeasurement, deleteMeasurement, deleteBlobImage } from "@/app/actions";
 import { getBlobImageSrc } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -89,8 +89,13 @@ export function EntryDetail({
 
       if (imageFile) {
         try {
+          // Delete old blob before uploading new one
+          if (initialImagePath) {
+            await deleteBlobImage(initialImagePath);
+          }
           const ext = imageFile.name.split(".").pop() || "jpg";
-          const blob = await upload(`${date}.${ext}`, imageFile, {
+          const suffix = Math.random().toString(36).substring(2, 8);
+          const blob = await upload(`${date}-${suffix}.${ext}`, imageFile, {
             access: "private",
             handleUploadUrl: "/api/upload",
           });

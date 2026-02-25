@@ -5,7 +5,7 @@ import { DigitRoller } from "@/components/digit-roller";
 import { ImageEditor } from "@/components/image-editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { createMeasurement, updateMeasurement } from "@/app/actions";
+import { createMeasurement, updateMeasurement, deleteBlobImage } from "@/app/actions";
 import { toast } from "sonner";
 import { upload } from "@vercel/blob/client";
 import { Loader2, Save, Pencil } from "lucide-react";
@@ -59,8 +59,13 @@ export function DailyEntry({
         // Upload image if a new file was selected
         if (pendingFile) {
           try {
+            // Delete old blob before uploading new one
+            if (imagePath) {
+              await deleteBlobImage(imagePath);
+            }
             const ext = pendingFile.name.split(".").pop() || "jpg";
-            const blob = await upload(`${today}.${ext}`, pendingFile, {
+            const suffix = Math.random().toString(36).substring(2, 8);
+            const blob = await upload(`${today}-${suffix}.${ext}`, pendingFile, {
               access: "private",
               handleUploadUrl: "/api/upload",
             });
