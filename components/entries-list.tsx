@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Plus, Camera } from "lucide-react";
 import { toast } from "sonner";
 import { createMeasurement } from "@/app/actions";
@@ -171,31 +170,28 @@ export function EntriesList({ entries }: { entries: Entry[] }) {
             </TableHeader>
             <TableBody>
               {entries.map((entry) => (
-                <TableRow key={entry.date} className="cursor-pointer">
-                  <TableCell colSpan={4} className="p-0">
-                    <Link
-                      href={`/entries/${entry.date}`}
-                      className="grid grid-cols-[1fr_auto_auto_auto] items-center w-full"
-                    >
-                      <span className="font-medium px-3 py-2">
-                        {formatDate(entry.date)}
-                      </span>
-                      <span className="text-right px-3 py-2">
-                        {entry.weight.toFixed(1)}
-                      </span>
-                      <span className="text-right text-muted-foreground px-3 py-2">
-                        {entry.circumference != null
-                          ? entry.circumference.toFixed(1)
-                          : "—"}
-                      </span>
-                      <span className="text-center px-3 py-2">
-                        {entry.hasImage ? (
-                          <Camera className="h-4 w-4 mx-auto text-primary" />
-                        ) : (
-                          <span className="text-muted-foreground">—</span>
-                        )}
-                      </span>
-                    </Link>
+                <TableRow
+                  key={entry.date}
+                  className="cursor-pointer"
+                  onClick={() => router.push(`/entries/${entry.date}`)}
+                >
+                  <TableCell className="font-medium">
+                    {formatDate(entry.date)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {entry.weight.toFixed(1)}
+                  </TableCell>
+                  <TableCell className="text-right text-muted-foreground">
+                    {entry.circumference != null
+                      ? entry.circumference.toFixed(1)
+                      : "—"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {entry.hasImage ? (
+                      <Camera className="h-4 w-4 mx-auto text-primary" />
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
