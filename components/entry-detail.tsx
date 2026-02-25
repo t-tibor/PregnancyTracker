@@ -136,17 +136,19 @@ export function EntryDetail({
   return (
     <>
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => router.push("/entries")}
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="text-2xl font-bold text-primary flex-1">
-          ⚙️ Bejegyzés részletei
-        </h1>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push("/entries")}
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-2xl font-bold text-primary">
+            ⚙️ Bejegyzés részletei
+          </h1>
+        </div>
         {!editing && (
           <div className="flex gap-2">
             <Button
