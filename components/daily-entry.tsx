@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { createMeasurement, updateMeasurement } from "@/app/actions";
 import { toast } from "sonner";
+import { upload } from "@vercel/blob/client";
 import { Loader2, Save, Pencil } from "lucide-react";
 
 interface MeasurementData {
@@ -57,20 +58,17 @@ export function DailyEntry({
 
         // Upload image if a new file was selected
         if (pendingFile) {
-          const formData = new FormData();
-          formData.append("file", pendingFile);
-          formData.append("date", today);
-          const res = await fetch("/api/upload", {
-            method: "POST",
-            body: formData,
-          });
-          if (!res.ok) {
-            const err = await res.json();
-            toast.error(err.error || "Sikertelen képfeltöltés");
+          try {
+            const ext = pendingFile.name.split(".").pop() || "jpg";
+            const blob = await upload(`${today}.${ext}`, pendingFile, {
+              access: "private",
+              handleUploadUrl: "/api/upload",
+            });
+            uploadedPath = blob.url;
+          } catch (err) {
+            toast.error((err as Error).message || "Sikertelen képfeltöltés");
             return;
           }
-          const data = await res.json();
-          uploadedPath = data.path;
         }
 
         if (existing) {

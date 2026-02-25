@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Pencil, Trash2, X, Save } from "lucide-react";
 import { toast } from "sonner";
+import { upload } from "@vercel/blob/client";
 import { updateMeasurement, deleteMeasurement } from "@/app/actions";
 import { getBlobImageSrc } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -87,17 +88,14 @@ export function EntryDetail({
       let uploadedPath = imagePath;
 
       if (imageFile) {
-        const formData = new FormData();
-        formData.append("file", imageFile);
-        formData.append("date", date);
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-        if (res.ok) {
-          const data = await res.json();
-          uploadedPath = data.path;
-        } else {
+        try {
+          const ext = imageFile.name.split(".").pop() || "jpg";
+          const blob = await upload(`${date}.${ext}`, imageFile, {
+            access: "private",
+            handleUploadUrl: "/api/upload",
+          });
+          uploadedPath = blob.url;
+        } catch {
           toast.error("Képfeltöltés sikertelen.");
           setSaving(false);
           return;

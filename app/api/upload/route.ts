@@ -1,42 +1,50 @@
+import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 
+/**
+ * Client-upload handler — the browser streams the file directly to Vercel Blob,
+ * bypassing the 4.5 MB serverless function body limit.
+ */
 export async function POST(request: NextRequest) {
+  const body = (await request.json()) as HandleUploadBody;
+
   try {
-    const formData = await request.formData();
-    const file = formData.get("file") as File | null;
-    const date = formData.get("date") as string | null;
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      onBeforeGenerateToken: async (pathname) => {
+        // Validate file extension
+        const ext = pathname.split(".").pop()?.toLowerCase();
+        const mimeMap: Record<string, string> = {
+          jpg: "image/jpeg",
+          jpeg: "image/jpeg",
+          png: "image/png",
+          webp: "image/webp",
+        };
+        if (!ext || !mimeMap[ext]) {
+          throw new Error("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
+        }
 
-    if (!file) {
-      return NextResponse.json({ error: "No file provided" }, { status: 400 });
-    }
-
-    if (!date) {
-      return NextResponse.json({ error: "No date provided" }, { status: 400 });
-    }
-
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return NextResponse.json(
-        { error: "Invalid file type. Only JPEG, PNG, and WebP are allowed." },
-        { status: 400 }
-      );
-    }
-
-    const ext = file.name.split(".").pop() || "jpg";
-    const filename = `${date}.${ext}`;
-
-    const blob = await put(filename, file, {
-      access: "private",
+        return {
+          allowedContentTypes: ALLOWED_TYPES,
+          maximumSizeInBytes: MAX_SIZE,
+          tokenPayload: JSON.stringify({}),
+        };
+      },
+      onUploadCompleted: async () => {
+        // No post-upload processing needed
+      },
     });
 
-    return NextResponse.json({ path: blob.url });
+    return NextResponse.json(jsonResponse);
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json(
-      { error: "Failed to upload file" },
-      { status: 500 }
+      { error: (error as Error).message },
+      { status: 400 }
     );
   }
 }
