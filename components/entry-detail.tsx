@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Pencil, Trash2, X, Save } from "lucide-react";
+import { ArrowLeft, Pencil, Trash2, X, Save, ImageMinus } from "lucide-react";
 import { toast } from "sonner";
 import { upload } from "@vercel/blob/client";
-import { updateMeasurement, deleteMeasurement, deleteBlobImage } from "@/app/actions";
+import { updateMeasurement, deleteMeasurement, deleteBlobImage, deleteImage } from "@/app/actions";
 import { getBlobImageSrc } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,8 +37,10 @@ export function EntryDetail({
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteImageOpen, setDeleteImageOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [deletingImage, setDeletingImage] = useState(false);
 
   const [weight, setWeight] = useState(initialWeight.toFixed(1));
   const [circumference, setCircumference] = useState(
@@ -237,14 +239,27 @@ export function EntryDetail({
         <div className="flex flex-col gap-2">
           <Label className="text-muted-foreground text-sm">Fotó</Label>
           {imagePath ? (
-            <div className="relative w-full max-w-sm aspect-[3/4] rounded-lg overflow-hidden border">
-              <img
-                src={getBlobImageSrc(imagePath)}
-                alt={`Pocakfot\u00f3: ${date}`}
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            </div>
+            <>
+              <div className="relative w-full max-w-sm aspect-[3/4] rounded-lg overflow-hidden border">
+                <img
+                  src={getBlobImageSrc(imagePath)}
+                  alt={`Pocakfot\u00f3: ${date}`}
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+              {editing && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-fit text-destructive hover:text-destructive"
+                  onClick={() => setDeleteImageOpen(true)}
+                >
+                  <ImageMinus className="h-4 w-4 mr-1" />
+                  Fotó törlése
+                </Button>
+              )}
+            </>
           ) : (
             <p className="text-muted-foreground">Nincs fotó</p>
           )}
@@ -277,6 +292,43 @@ export function EntryDetail({
           </Button>
         </div>
       )}
+
+      {/* Delete image confirmation dialog */}
+      <Dialog open={deleteImageOpen} onOpenChange={setDeleteImageOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Fotó törlése</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Biztosan törölni szeretné a fotót ehhez a bejegyzéshez: <strong>{formatDate(date)}</strong>? Ez a művelet nem vonható vissza.
+          </p>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Mégse</Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                setDeletingImage(true);
+                try {
+                  await deleteImage(date);
+                  setImagePath(null);
+                  setDeleteImageOpen(false);
+                  toast.success("Fotó törölve.");
+                  router.refresh();
+                } catch {
+                  toast.error("Sikertelen fotó törlés.");
+                } finally {
+                  setDeletingImage(false);
+                }
+              }}
+              disabled={deletingImage}
+            >
+              {deletingImage ? "Törlés…" : "Törlés"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Delete confirmation dialog */}
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>

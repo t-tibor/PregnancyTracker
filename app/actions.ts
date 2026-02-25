@@ -96,6 +96,26 @@ export async function updateMeasurement(
   return measurement;
 }
 
+export async function deleteImage(dateStr: string) {
+  const existing = await prisma.measurement.findUnique({
+    where: { date: parseDate(dateStr) },
+    select: { imagePath: true },
+  });
+
+  await deleteBlobImage(existing?.imagePath ?? null);
+
+  await prisma.measurement.update({
+    where: { date: parseDate(dateStr) },
+    data: { imagePath: null },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/entries");
+  revalidatePath(`/entries/${dateStr}`);
+  revalidatePath("/table-report");
+  revalidatePath("/chart-report");
+}
+
 export async function deleteMeasurement(dateStr: string) {
   // Fetch imagePath before deleting so we can clean up the blob
   const existing = await prisma.measurement.findUnique({
