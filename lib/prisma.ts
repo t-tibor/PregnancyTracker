@@ -11,14 +11,7 @@ function createPrismaClient(): PrismaClient {
   if (!connectionString) {
     throw new Error("DATABASE_URL environment variable is not set");
   }
-  // Use max:1 for serverless compatibility — pg.Pool with multiple connections
-  // causes "Connection terminated unexpectedly" in short-lived Lambda environments.
-  const pool = new pg.Pool({
-    connectionString,
-    max: 1,
-    idleTimeoutMillis: 10000,
-    connectionTimeoutMillis: 10000,
-  });
+  const pool = new pg.Pool({ connectionString });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 }
