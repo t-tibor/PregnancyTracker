@@ -45,6 +45,7 @@ CLAUDE.md
 # Testing
 .playwright/
 .playwright-cli/
+tests/
 
 # Uploads (will be mounted as volume)
 public/uploads/*

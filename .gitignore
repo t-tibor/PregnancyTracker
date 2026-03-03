@@ -46,7 +46,7 @@ public/uploads/*
 !public/uploads/.gitkeep
 next-env.d.ts
 
-/app/generated/prisma
+/src/app/generated/prisma
 
 .vercel
 

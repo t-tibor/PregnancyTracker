@@ -4,27 +4,33 @@
 A mobile-first web app for tracking pregnancy measurements (weight, abdominal circumference, belly photos). Single-user, no auth. See `docs/PRD.md` for full requirements.
 
 ## Tech Stack
-- **Framework:** Next.js 15 (App Router), TypeScript, React 19
+- **Framework:** Next.js 16 (App Router), TypeScript, React 19
 - **Styling:** Tailwind CSS 4 + shadcn/ui (New York style)
 - **ORM:** Prisma with PostgreSQL (Supabase)
 - **Charts:** Recharts
+- **Testing:** Vitest (unit/integration) + Playwright (E2E)
 - **Package manager:** pnpm
 
 ## Directory Structure
 ```
-app/                    # Next.js App Router pages & layouts
-  api/upload/           # Image upload API route
-  actions.ts            # Server Actions (all data mutations)
-  chart-report/         # Chart report page
-  entries/              # Admin CRUD pages
-    [date]/             # Single entry detail
-  table-report/         # Table report page
-components/             # Reusable React components
-  charts/               # Recharts chart components
-  ui/                   # shadcn/ui generated components
-lib/                    # Utilities & shared logic
-  prisma.ts             # Prisma client singleton
-prisma/                 # Prisma schema & migrations
+src/                    # All source code
+  app/                  # Next.js App Router pages & layouts
+    api/upload/         # Image upload API route
+    actions.ts          # Server Actions (all data mutations)
+    chart-report/       # Chart report page
+    entries/            # Admin CRUD pages
+      [date]/           # Single entry detail
+    table-report/       # Table report page
+  components/           # Reusable React components
+    charts/             # Recharts chart components
+    ui/                 # shadcn/ui generated components
+  hooks/                # Custom React hooks
+  lib/                  # Utilities & shared logic
+    prisma.ts           # Prisma client singleton
+  prisma/               # Prisma schema & migrations
+tests/                  # All tests (outside src/)
+  unit/                 # Vitest unit & integration tests
+  e2e/                  # Playwright end-to-end tests
 public/uploads/         # Uploaded belly photos (gitignored)
 docs/                   # Documentation (PRD)
 helm/                   # Helm chart for k3s deployment
@@ -33,7 +39,7 @@ helm/                   # Helm chart for k3s deployment
 ## Coding Conventions
 - **TypeScript strict mode** — no `any` types unless absolutely necessary
 - **Server Components by default** — only add `"use client"` when client interactivity is needed
-- **Server Actions for mutations** — all CRUD operations via Server Actions in `app/actions.ts`
+- **Server Actions for mutations** — all CRUD operations via Server Actions in `src/app/actions.ts`
 - **File naming:** kebab-case for files (e.g. `digit-roller.tsx`)
 - **Component naming:** PascalCase (e.g. `DigitRoller`)
 - **Function naming:** camelCase (e.g. `getMeasurements`)
@@ -42,13 +48,16 @@ helm/                   # Helm chart for k3s deployment
 - Uses Supabase PostgreSQL with connection pooler
 - `DATABASE_URL` = pooled connection (port 6543, `?pgbouncer=true`) — used at runtime
 - `DIRECT_URL` = direct connection (port 5432) — used for migrations
-- Singleton pattern in `lib/prisma.ts` to avoid connection leaks in dev hot-reload
+- Singleton pattern in `src/lib/prisma.ts` to avoid connection leaks in dev hot-reload
 
 ## Common Commands
 ```bash
 pnpm dev                          # Start dev server (http://localhost:3000)
 pnpm build                        # Production build
 pnpm lint                         # Run ESLint
+pnpm test                         # Run unit tests (Vitest)
+pnpm test:watch                   # Run unit tests in watch mode
+pnpm test:e2e                     # Run E2E tests (Playwright)
 npx prisma migrate dev --name <n> # Create & run a migration
 npx prisma migrate deploy         # Apply pending migrations (prod)
 npx prisma generate               # Regenerate Prisma Client
