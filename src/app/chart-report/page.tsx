@@ -27,7 +27,7 @@ export default async function ChartReportPage() {
   });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 overflow-x-visible">
       <h1 className="text-2xl font-bold text-primary">📊 Grafikon Kimutatás</h1>
 
       {chartData.length === 0 ? (
